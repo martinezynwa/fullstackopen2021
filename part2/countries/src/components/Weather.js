@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 
-const Weather = ({ city, countries }) => {
+const Weather = ({ countries }) => {
     const [weather, setWeather] = useState([])
-    var numberOfCountries = countries.length
-    var apiKey = process.env.REACT_APP_API_KEY
+    const apiKey = process.env.REACT_APP_API_KEY
 
-    console.log('apiKey :>> ', apiKey);
-    
-    const baseUrl = 'https://api.openweathermap.org/data/2.5/weather?q=' + city?.[0] + '&appid=' + apiKey
+    const capitalCity = countries.length === 1
+        ? countries[0].capital
+        : null
+
+    const baseUrl = 'https://api.openweathermap.org/data/2.5/weather?q=' + capitalCity?.[0] + '&appid=' + apiKey
 
     useEffect(() => {
         axios
@@ -16,9 +17,9 @@ const Weather = ({ city, countries }) => {
             .then(response => {
                 setWeather(response.data)
             })
-    }, [city?.[0]])
+    }, [capitalCity?.[0]])
 
-    switch (numberOfCountries) {
+    switch (countries.length) {
         default:
             return (
                 <div></div>
@@ -26,17 +27,16 @@ const Weather = ({ city, countries }) => {
         case 1:
             return (
                 <div>
-                    <h2>Weather in {city[0]}</h2>
+                    <h2>Weather in {capitalCity[0]}</h2>
                     <div><b>temperature: </b>{((weather.main?.temp) - 273.15).toFixed(0)} Celsius</div>
                     <img src={'http://openweathermap.org/img/wn/' + weather.weather?.[0].icon + '@2x.png'}
-                                width="auto"
-                                height="auto"
-                            />
+                        width="auto"
+                        height="auto"
+                    />
                     <div><b>wind: </b>{weather.wind?.speed} mph,  {weather.wind?.deg} degrees</div>
                 </div>
             )
     }
-
 }
 
 export default Weather;

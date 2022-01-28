@@ -3,11 +3,14 @@ import Country from './components/Country'
 import axios from 'axios'
 import CountryFilter from './components/CountryFilter'
 import Weather from './components/Weather'
-import './components/style.css'
 
 const App = () => {
   const [countries, setCountries] = useState([])
-  const [filteredCountry, setFilteredCountry] = useState('')
+  const [filter, setFilter] = useState('')
+
+  let countriesToShow = filter === ''
+    ? countries
+    : countries.filter(country => country.name.common.toLowerCase().includes(filter.toLowerCase()))
 
   useEffect(() => {
     axios
@@ -17,31 +20,18 @@ const App = () => {
       })
   }, [])
 
-  const handleFiltering = (event) => {
-    setFilteredCountry(event.target.value)
-  }
-
   const handleClick = (event) => {
-    const matchedCountry = countriesToShow.filter(country =>
+    countriesToShow = countriesToShow.filter(country =>
       country.name.common.includes(event.target.value)
     )
-    countriesToShow = matchedCountry
-    setFilteredCountry(event.target.value)
+    setFilter(event.target.value)
   }
-
-  let countriesToShow = filteredCountry === ''
-    ? countries
-    : countries.filter(country => country.name.common.toLowerCase().includes(filteredCountry.toLowerCase()))
-
-  const capitalCity = countriesToShow.length === 1
-    ? countriesToShow.map(country => country.capital)
-    : null
 
   return (
     <div>
       <CountryFilter
-        value={filteredCountry}
-        onChange={handleFiltering}
+        value={filter}
+        onChange={setFilter}
       />
       <br />
       <Country
@@ -49,7 +39,6 @@ const App = () => {
         handleClick={handleClick}
       />
       <Weather
-        city={capitalCity}
         countries={countriesToShow}
       />
     </div>

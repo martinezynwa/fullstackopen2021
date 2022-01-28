@@ -19,6 +19,11 @@ const App = () => {
         name: 'State of a component',
         exercises: 14,
         id: 3
+      },
+      {
+        name: 'Redux',
+        exercises: 11,
+        id: 4
       }
     ]
   }
@@ -27,6 +32,7 @@ const App = () => {
     <div>
       <Course course={course} />
       <Parts course={course} />
+      <Total course={course} />
     </div>
   )
 }
@@ -40,17 +46,26 @@ const Course = (props) => {
 }
 
 const Parts = (props) => {
-  const part = props.course.parts.map( part => 
-    
-    {
-      return (
-        <div key={part.id}>
-          <p>{part.name} {part.exercises}</p>
-        </div>
-      )
-    })
-    return part
+  const part = props.course.parts.map(part => {
+    return (
+      <div key={part.id}>
+        <p>{part.name} {part.exercises}</p>
+      </div>
+    )
+  })
+  return part
 }
+
+const Total = (props) => {
+  var exercises = props.course.parts.map(part => { return part.exercises })
+
+  var total = exercises.reduce((startingValue, part) => startingValue + part, 0)
+
+  return (<div>
+    <b>total of {total} exercises</b>
+  </div>);
+}
+
 
 
 export default App

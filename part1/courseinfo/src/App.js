@@ -1,66 +1,85 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
+import React from 'react'
 
 const App = () => {
-	const course = 'Half Stack application development'
-	const parts = [
-		{
-		  name: 'Fundamentals of React',
-		  exercises: 10
-		},
-		{
-		  name: 'Using props to pass data',
-		  exercises: 7
-		},
-		{
-		  name: 'State of a component',
-		  exercises: 14
-		}
-	]
+  const course = {
+    name: 'Half Stack application development',
+    parts: [
+      {
+        name: 'Fundamentals of React',
+        exercises: 10
+      },
+      {
+        name: 'Using props to pass data',
+        exercises: 7
+      },
+      {
+        name: 'State of a component',
+        exercises: 14
+      }
+    ]
+  }
 
-	return (
-		<div>
-			<Header course={course} />
-			<Content parts={parts} />
-			<Total parts={parts} />
-		</div>
-	)
-};
+  return (
+    <div>
+      <Header course={course} />
+      <Content course={course} />
+      <Total />
+    </div>
+  )
+}
 
-const Header = (props) => {
-	return (
-		<div>
-			<h1>{props.course}</h1>
-		</div>
-	)
-};
+var total = 0
+
+const Header = ({ course }) => {
+  return (
+    <>
+      <div>
+        <h1>{course.name}</h1>
+      </div>
+    </>
+  )
+}
+
+/*
+const Content = ({ course }) => {
+  const parts = course.parts
+
+  const part = parts.map(item => {
+    total = total + item.exercises
+    return (
+      <>
+        <div>
+          <p>{item.name}: {item.exercises}</p>
+        </div>
+      </>
+    )
+  })
+  return part
+}
+*/
 
 const Content = (props) => {
-	const lists = props.parts.map(function(item) {
-		return (
-			<div>
-				<p> {item.name}: {item.exercises}</p>
-			</div>
-		)
-	})
-	
-	return lists
+  const lists = props.course.parts.map(function (item) {
+    total = total + item.exercises
+    return (
+      <div>
+        <p>{item.name}: {item.exercises}</p>
+      </div>
+    )
+  })
+
+  return lists
 };
 
-const Total = (props) => {
-	var score = 0
-	
-	const lists = props.parts.map(function(item) {
-		
-		score = score + item.exercises 
-		
-	})
-	
-	return (
-		<div>
-			<p>Number of exercises: {score} </p>
-		</div>
-	)
-};
+const Total = () => {
 
-ReactDOM.render(<App />, document.getElementById('root'));
+  return (
+    <>
+      <div>
+        <p>Number of exercises: {total}</p>
+      </div>
+    </>
+  )
+}
+
+export default App

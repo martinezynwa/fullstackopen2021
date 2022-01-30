@@ -1,4 +1,4 @@
-import React from "react";
+import React from "react" 
 
 const PersonForm = ({
   newName,
@@ -19,7 +19,7 @@ const PersonForm = ({
         <button type="submit">add</button>
       </div>
     </form>
-  );
-};
+  ) 
+} 
 
-export default PersonForm;
+export default PersonForm 

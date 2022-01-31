@@ -4,12 +4,14 @@ import Filter from "./components/Filter"
 import PhoneBook from "./components/PhoneBook"
 import PersonForm from "./components/PersonForm"
 import PersonService from "./services/PersonService"
+import Notification from "./components/Notification"
 
 const App = () => {
   const [persons, setPersons] = useState([])
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [showFilter, setshowFilter] = useState('')
+  const [showMessage, setShowMessage] = useState(null)
 
   useEffect(() => {
     PersonService
@@ -37,15 +39,19 @@ const App = () => {
             setNewNumber('')
           })
           .catch(error => {
-            alert(`Update failed. User ${newName} is not in the phonebook.`);
-            setPersons(persons.filter(n => n.name !== newName));
-          });
+            alert(`Update failed. User ${newName} is not in the phonebook.`) 
+            setPersons(persons.filter(n => n.name !== newName)) 
+          }) 
       }
     } else {
       PersonService
         .create(personObject)
         .then(response => {
           setPersons(persons.concat(response.data))
+          setShowMessage(`Added ${personObject.name}`)
+          setTimeout(() => {
+            setShowMessage(null)
+          }, 3000)
           setNewName('')
           setNewNumber('')
         })
@@ -53,6 +59,7 @@ const App = () => {
   }
 
   const deleteRecord = person => {
+    const message = `Removal failed. User ${person.name} is not in the phonebook.`
     if (window.confirm(`Delete ${person.name}? `) == true) {
       PersonService
         .remove(person.id)
@@ -60,7 +67,11 @@ const App = () => {
           setPersons(persons.filter(item => item.id !== person.id))
         })
         .catch(error => {
-          alert(`Removal failed. User ${person.name} is not in the phonebook.`);
+          alert(message)
+          setShowMessage(message)
+          setTimeout(() => {
+            setShowMessage(null)
+          }, 3000)
         })
     }
   }
@@ -76,6 +87,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={showMessage} />
       <Filter showFilter={showFilter} setshowFilter={setshowFilter} />
       <h2>add a new</h2>
       <PersonForm

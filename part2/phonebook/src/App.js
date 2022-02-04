@@ -30,18 +30,19 @@ const App = () => {
     }
     if (persons.some(e => e.name === personObject.name)) {
       if (window.confirm(`${personObject.name} is already added to phonebook, replace old number with ${personObject.number}? `) == true) {
-        const index = persons.findIndex(x => x.name === personObject.name) + 1
+        const foundPerson = persons.find(person => person.name === personObject.name)
+        const changedPerson = { ...foundPerson, number: personObject.number }
         PersonService
-          .update(index, personObject)
+          .update(foundPerson.id, changedPerson)
           .then(response => {
             setPersons(persons.map(person => person.id !== response.data.id ? person : response.data))
             setNewName('')
             setNewNumber('')
           })
           .catch(error => {
-            alert(`Update failed. User ${newName} is not in the phonebook.`) 
-            setPersons(persons.filter(n => n.name !== newName)) 
-          }) 
+            alert(`Update failed. User ${newName} is not in the phonebook.`)
+            setPersons(persons.filter(n => n.name !== newName))
+          })
       }
     } else {
       PersonService
@@ -54,6 +55,9 @@ const App = () => {
           }, 3000)
           setNewName('')
           setNewNumber('')
+        })
+        .catch(error => {
+          console.log(error.response)
         })
     }
   }

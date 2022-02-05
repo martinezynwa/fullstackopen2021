@@ -12,6 +12,7 @@ const App = () => {
   const [newNumber, setNewNumber] = useState('')
   const [showFilter, setshowFilter] = useState('')
   const [showMessage, setShowMessage] = useState(null)
+  const [notificationType, setNotificationType] = useState('success')
 
   useEffect(() => {
     PersonService
@@ -40,8 +41,9 @@ const App = () => {
             setNewNumber('')
           })
           .catch(error => {
-            alert(`Update failed. User ${newName} is not in the phonebook.`)
-            setPersons(persons.filter(n => n.name !== newName))
+            setShowMessage(error.response.data.error)
+            setNotificationType('error')
+            setPersons(persons)
           })
       }
     } else {
@@ -50,6 +52,7 @@ const App = () => {
         .then(response => {
           setPersons(persons.concat(response.data))
           setShowMessage(`Added ${personObject.name}`)
+          setNotificationType('success')
           setTimeout(() => {
             setShowMessage(null)
           }, 3000)
@@ -57,7 +60,8 @@ const App = () => {
           setNewNumber('')
         })
         .catch(error => {
-          console.log(error.response)
+          setShowMessage(error.response.data.error)
+          setNotificationType('error')
         })
     }
   }
@@ -73,6 +77,7 @@ const App = () => {
         .catch(error => {
           alert(message)
           setShowMessage(message)
+          setNotificationType('error')
           setTimeout(() => {
             setShowMessage(null)
           }, 3000)
@@ -91,7 +96,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <Notification message={showMessage} />
+      <Notification message={showMessage} type={notificationType} />
       <Filter showFilter={showFilter} setshowFilter={setshowFilter} />
       <h2>add a new</h2>
       <PersonForm

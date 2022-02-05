@@ -1,17 +1,21 @@
 import React from 'react'
 
-const Notification = ({ message }) => {
-    switch (true) {
-        case message === null:
-            return <div></div>
-        case !message.includes('Removal'):
-            return (
-                <div className="added">{message}</div>
-            )
-        case message.includes('Removal'):
-            return (
-                <div className="removed">{message}</div>
-            )
+const Notification = ({ message, type }) => {
+
+    if (message === null) {
+        return <div></div>
+    }
+
+    if (type === 'success') {
+        return (
+            <div className="success">{message}</div>
+        )
+    }
+
+    if (type === 'error') {
+        return (
+            <div className="error">{message}</div>
+        )
     }
 }
 

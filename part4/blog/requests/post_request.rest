@@ -1,0 +1,9 @@
+POST http://localhost:3001/api/blogs/
+Content-Type: application/json
+
+{
+    "title": "Liverpool - Barcelona, 2019",
+    "author": "Jurgen Klopp",
+    "url": "www.lfcbcn.com",
+    "likes": 999
+}

@@ -42,12 +42,6 @@ test('making a HTTP POST is successful', async () => {
     url: 'www.testurlx.test',
   }
 
-  try {
-    expect(newBlog.likes).toBeDefined()
-  } catch (error) {
-    newBlog.likes = 0
-  }
-
   await api
     .post('/api/blogs')
     .send(newBlog)
@@ -61,6 +55,27 @@ test('making a HTTP POST is successful', async () => {
   expect(contents).toContain(newBlog.title)
 })
 
+test('HTTP DELETE is successful', async () => {
+  const blogs = await helper.blogsInDb()
+
+  await api.delete(`/api/blogs/${blogs[0].id}`).expect(204)
+
+  const blogAfterDelete = await helper.blogsInDb()
+
+  const titles = blogAfterDelete.map(b => b.title)
+  expect(titles).not.toContain(blogAfterDelete.title)
+})
+
+test('HTTP PUT is successful', async () => {
+  const blogs = await helper.blogsInDb()
+  const editedBlog = { ...blogs[0], likes: blogs[0].likes + 1 }
+
+  await api.put(`/api/blogs/${blogs[0].id}`).send(editedBlog).expect(200)
+
+  const blogAfterEdit = await helper.blogsInDb()
+
+  expect(blogAfterEdit[0].likes).toBe(blogs[0].likes + 1)
+})
 
 afterAll(() => {
   mongoose.connection.close()

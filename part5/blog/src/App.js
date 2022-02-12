@@ -12,10 +12,11 @@ const App = () => {
     author: '',
     url: '',
   })
-  const [errorMessage, setErrorMessage] = useState(null)
+  const [showMessage, setShowMessage] = useState(null)
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
+  const [notificationType, setNotificationType] = useState('success')
 
   useEffect(() => {
     blogService.getAll().then(initialBlogs => {
@@ -70,9 +71,10 @@ const App = () => {
       setUsername('')
       setPassword('')
     } catch (exception) {
-      setErrorMessage('Wrong credentials')
+      setNotificationType('error')
+      setShowMessage('Wrong credentials')
       setTimeout(() => {
-        setErrorMessage(null)
+        setShowMessage(null)
       }, 5000)
     }
   }
@@ -114,11 +116,16 @@ const App = () => {
       setBlogs(blogs.concat(returnedBlog))
       setNewBlog({ ...newBlog, title: '', author: '', url: '' })
     })
+    setNotificationType('success')
+    setShowMessage(`a new blog ${newBlog.title} by ${newBlog.author} added`)
+    setTimeout(() => {
+      setShowMessage(null)
+    }, 5000)
   }
 
   return (
     <div>
-      <Notification message={errorMessage} />
+      <Notification message={showMessage} type={notificationType} />
       {user === null ? (
         loginForm()
       ) : (

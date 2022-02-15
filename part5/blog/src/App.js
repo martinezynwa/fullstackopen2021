@@ -19,8 +19,8 @@ const App = () => {
   const blogFormRef = useRef()
 
   useEffect(() => {
-    blogService.getAll().then(initialBlogs => {
-      setBlogs(initialBlogs)
+    blogService.getAll().then(blogs => {
+      setBlogs(blogs)
     })
   }, [])
 
@@ -71,7 +71,7 @@ const App = () => {
     setUser(null)
   }
 
-  const addBlog = blogObject => {
+  const createBlog = blogObject => {
     blogFormRef.current.toggleVisibility()
     blogService.create(blogObject).then(returnedBlog => {
       setBlogs(blogs.concat(returnedBlog))
@@ -85,11 +85,69 @@ const App = () => {
     }, 5000)
   }
 
+  const clickLike = async blog => {
+    try {
+      const updatedData = {
+        data: {
+          likes: blog.likes + 1,
+        },
+        id: blog.id,
+      }
+      const updatedBlog = await blogService.update(updatedData)
+      setBlogs(
+        blogs.map(b =>
+          b.id === updatedBlog.id ? { ...b, likes: updatedBlog.likes } : b,
+        ),
+      )
+      setNotificationType('success')
+      setShowMessage(
+        `total likes for ${updatedBlog.title}: ${updatedBlog.likes}`,
+      )
+      setTimeout(() => {
+        setShowMessage(null)
+      }, 5000)
+    } catch (error) {
+      setNotificationType('error')
+      setShowMessage(`${error}`)
+      setTimeout(() => {
+        setShowMessage(null)
+      }, 5000)
+    }
+  }
+
   const blogForm = () => (
     <Togglable buttonLabel="create new blog" ref={blogFormRef}>
-      <BlogForm createBlog={addBlog} />
+      <BlogForm createBlog={createBlog} />
     </Togglable>
   )
+
+  const sortByLikes = () => {
+    blogs.sort((a, b) => {
+      return b.likes - a.likes
+    })
+  }
+
+  const clickDelete = async blog => {
+    if (
+      window.confirm(`Remove blog "${blog.title}" by ${blog.author}? `) == true
+    ) {
+      try {
+        await blogService.remove(blog.id)
+        setBlogs(blogs.filter(b => b.id !== blog.id))
+        setNotificationType('success')
+        setShowMessage(`blog ${blog.title} removed`)
+        setTimeout(() => {
+          setShowMessage(null)
+        }, 5000)
+      } catch (error) {
+        setNotificationType('error')
+        setShowMessage(`${error}`)
+        setTimeout(() => {
+          setShowMessage(null)
+        }, 5000)
+      }
+    }
+  }
 
   return (
     <div>
@@ -108,8 +166,14 @@ const App = () => {
           </button>
           <h1>Create new</h1>
           {blogForm()}
+          {sortByLikes()}
           {blogs.map(blog => (
-            <Blog key={blog.id} blog={blog} />
+            <Blog
+              key={blog.id}
+              blog={blog}
+              clickLike={clickLike}
+              clickDelete={clickDelete}
+            />
           ))}
         </div>
       )}

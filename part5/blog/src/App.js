@@ -129,7 +129,7 @@ const App = () => {
 
   const clickDelete = async blog => {
     if (
-      window.confirm(`Remove blog "${blog.title}" by ${blog.author}? `) == true
+      window.confirm(`Remove blog "${blog.title}" by ${blog.author}? `) === true
     ) {
       try {
         await blogService.remove(blog.id)
@@ -157,7 +157,7 @@ const App = () => {
       ) : (
         <div>
           <h1>Blogs</h1>
-          <p>{user.name} logged-in</p>
+          <p id='success_login'>{user.name} logged-in</p>
           <button
             onClick={() => {
               logoutHandler()

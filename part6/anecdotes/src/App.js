@@ -1,23 +1,16 @@
-import Anecdotes from './components/Anecdotes'
-import NewAnecdote from './components/NewAnecdote'
+import React from 'react'
+import Notification from './components/Notification'
+import AnecdoteForm from './components/AnecdoteForm'
+import AnecdoteList from './components/AnecdoteList'
+import Filter from './components/Filter'
 
-const App = () => {
-  return (
-    <div>
-      <NewAnecdote />
-      <Anecdotes />
-    </div>
-  )
-}
-
-/*  const anecdotes = useSelector(state => state)
-  const dispatch = useDispatch()
-
-  const vote = (id) => {
-    console.log('vote', id)
-  }
-
-
-}*/
+const App = () => (
+  <div>
+    <Notification />
+    <Filter />
+    <AnecdoteForm />
+    <AnecdoteList />
+  </div>
+)
 
 export default App

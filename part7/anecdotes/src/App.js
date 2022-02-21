@@ -1,5 +1,6 @@
 import ReactDOM from 'react-dom'
 import { useState } from 'react'
+import { useField } from './hooks'
 
 import {
   Routes,
@@ -99,50 +100,44 @@ const Footer = () => (
 )
 
 const CreateNew = props => {
-  const [content, setContent] = useState('')
-  const [author, setAuthor] = useState('')
-  const [info, setInfo] = useState('')
+  const content = useField('content')
+  const author = useField('author')
+  const info = useField('info')
 
   const handleSubmit = e => {
     e.preventDefault()
     props.addNew({
-      content,
-      author,
-      info,
+      content: content.fieldProperties.value,
+      author: author.fieldProperties.value,
+      info: info.fieldProperties.value,
       votes: 0,
     })
   }
 
+  const resetFields = () => {
+    content.reset()
+    author.reset()
+    info.reset()
+  }
+
   return (
     <div>
-      <h2>create a new anecdote</h2>
       <form onSubmit={handleSubmit}>
         <div>
           content
-          <input
-            name="content"
-            value={content}
-            onChange={e => setContent(e.target.value)}
-          />
+          <input {...content.fieldProperties} />
         </div>
         <div>
           author
-          <input
-            name="author"
-            value={author}
-            onChange={e => setAuthor(e.target.value)}
-          />
+          <input {...author.fieldProperties} />
         </div>
         <div>
           url for more info
-          <input
-            name="info"
-            value={info}
-            onChange={e => setInfo(e.target.value)}
-          />
+          <input {...info.fieldProperties} />
         </div>
         <button>create</button>
       </form>
+      <button onClick={() => resetFields()}>reset</button>
     </div>
   )
 }
@@ -172,7 +167,7 @@ const App = () => {
   const [notification, setNotification] = useState('')
 
   const addNew = anecdote => {
-    anecdote.id = (Math.random() * 10000).toFixed(0)
+    anecdote.id = Number((Math.random() * 10000).toFixed(0))
     setAnecdotes(anecdotes.concat(anecdote))
     setNotification(`a new anecdote '${anecdote.content}' is created`)
     setTimeout(() => {

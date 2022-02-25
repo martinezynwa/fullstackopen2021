@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { useSelector, useDispatch } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import {
   Routes,
   Route,
@@ -13,6 +13,7 @@ import Header from './components/Header'
 import LoginForm from './components/LoginForm'
 import BlogForm from './components/BlogForm'
 import Blogs from './components/Blogs'
+import Users from './components/Users'
 import Togglable from './components/Togglable'
 import Notification from './components/Notification'
 import blogService from './services/blogs'
@@ -28,8 +29,11 @@ const Menu = () => {
   }
   return (
     <div>
+      <Link style={padding} to="/">
+        home
+      </Link>
       <Link style={padding} to="/users">
-        anecdotes
+        users
       </Link>
     </div>
   )
@@ -40,9 +44,6 @@ const App = () => {
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
 
-  const users = useSelector(state => state.users)
-
-  console.log('users :>> ', users)
   const blogFormRef = useRef()
   const dispatch = useDispatch()
 
@@ -107,6 +108,7 @@ const App = () => {
           path="/"
           element={
             <>
+              <h1>Create new</h1>
               <Togglable buttonLabel="create new blog" ref={blogFormRef}>
                 <BlogForm />
               </Togglable>
@@ -115,6 +117,7 @@ const App = () => {
             </>
           }
         />
+        <Route path="/users" element={<Users />} />
       </Routes>
     </div>
   )

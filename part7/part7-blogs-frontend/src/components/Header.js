@@ -11,7 +11,6 @@ const Header = ({ logout, user }) => {
         }}>
         logout
       </button>
-      <h1>Create new</h1>
     </div>
   )
 }

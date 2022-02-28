@@ -1,6 +1,8 @@
-import React, { useState } from 'react'
+import React from 'react'
+import { Link } from 'react-router-dom'
+import { Table } from 'react-bootstrap'
 
-const Blog = ({ blog, clickLike, clickDelete }) => {
+/*const Blog = ({ blog, clickLike, clickDelete }) => {
   const [visible, setVisible] = useState(false)
   const hideWhenVisible = { display: visible ? 'none' : '' }
   const showWhenVisible = { display: visible ? '' : 'none' }
@@ -15,7 +17,9 @@ const Blog = ({ blog, clickLike, clickDelete }) => {
         <button id="showBlogs" onClick={toggleVisibility}>
           show
         </button>
-        <div id="blogTitle">{blog.title}</div>
+        <Link to={`/blogs/${blog.id}`}>
+          <div id="blogTitle">{blog.title}</div>
+        </Link>
       </div>
       <div style={showWhenVisible}>
         <button onClick={toggleVisibility}>hide</button>
@@ -30,6 +34,24 @@ const Blog = ({ blog, clickLike, clickDelete }) => {
           delete
         </button>
       </div>
+    </div>
+  )
+}*/
+
+const Blog = blog => {
+  return (
+    <div>
+      <Table striped>
+        <tbody>
+          <tr>
+            <td>
+              <Link to={`/blogs/${blog.blog.id}`}>
+                <div>{blog.blog.title}</div>
+              </Link>
+            </td>
+          </tr>
+        </tbody>
+      </Table>
     </div>
   )
 }

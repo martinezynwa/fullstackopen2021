@@ -1,0 +1,23 @@
+{
+  "name": "library-graphql",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@apollo/client": "^3.5.10",
+    "apollo-server": "^2.25.3",
+    "apollo-server-core": "^3.6.3",
+    "graphql": "^15.8.0",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^5.13.14",
+    "mongoose-unique-validator": "^2.0.3",
+    "nodemon": "^2.0.15",
+    "uuid": "^8.3.2"
+  }
+}
